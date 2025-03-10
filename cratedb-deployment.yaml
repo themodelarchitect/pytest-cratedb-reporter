@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cratedb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cratedb-service
+  namespace: cratedb
+  labels:
+    app: cratedb
+spec:
+  type: ClusterIP
+  ports:
+    - name: transport
+      port: 4300
+      targetPort: 4300
+    - name: http
+      port: 4200
+      targetPort: 4200
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: cratedb
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cratedb-statefulset
+  namespace: cratedb
+spec:
+  serviceName: cratedb-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cratedb
+  template:
+    metadata:
+      labels:
+        app: cratedb
+    spec:
+      containers:
+        - name: cratedb
+          image: crate:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4300
+              name: transport
+            - containerPort: 4200
+              name: http
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: CRATE_HEAP_SIZE
+              value: "1g" # Adjust based on your resources
+          volumeMounts:
+          - name: cratedb-data
+            mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: cratedb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi # Adjust as needed
