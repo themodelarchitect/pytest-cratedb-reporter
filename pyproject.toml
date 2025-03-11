@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytest-cratedb-reporter"
+version = "0.1.0"
+description = "A pytest plugin for reporting test results to CrateDB"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Jonathan Kittell", email = "jkittell@gmail.com"}
+]
+classifiers = [
+    "Framework :: Pytest",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pytest>=6.0.0",
+    "sqlalchemy-cratedb>=0.41.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/themodelarchitect/pytest-cratedb-reporter"
+"Bug Tracker" = "https://github.com/themodelarchitect/pytest-cratedb-reporter/issues"
+
+[project.entry-points.pytest11]
+cratedb_reporter = "pytest_cratedb_reporter.plugin"
